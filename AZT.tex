@@ -1,0 +1,518 @@
+\documentclass{amsbook}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage[spanish]{babel}
+\usepackage{enumitem}
+\usepackage{imakeidx}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{cd}
+\usepackage{pgf}
+
+\renewcommand{\.}{\cdot}
+\renewcommand{\:}{\colon}               %% colon in  f: A -> B
+\newcommand{\half}{\frac{1}{2}}
+\newcommand{\x}{\times}
+
+\newcommand{\bC}{\mathbb{C}}    %%% números complejos
+\newcommand{\bQ}{\mathbb{Q}}    %%% números racionales
+\newcommand{\bR}{\mathbb{R}}    %%% números reales
+\newcommand{\bZ}{\mathbb{Z}}    %%% números enteros
+\newcommand{\set}[1]{\left\{\,#1\,\right\}}    %% set notation
+\newcommand{\isom}{\simeq}              %% isomorfismo
+\newcommand{\To}{\Rightarrow}
+\newcommand{\into}{\hookrightarrow}     %% injection arrow
+\newcommand{\onto}{\twoheadrightarrow}  %% surjection arrow
+\newcommand{\word}[1]{\quad\mbox{#1}\quad} %% texto intercalado
+\newcommand{\st}{\;\ifnum\currentgrouptype=16 \middle\fi|\;} %El comando Barquero
+
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\id}{id}
+
+% Greek letters:
+\newcommand{\al}{\alpha}                %% short for  \alpha
+\newcommand{\bt}{\beta}                 %% short for  \beta
+\newcommand{\ga}{\gamma}                %% short for  \gamma
+\newcommand{\sg}{\sigma}
+\newcommand{\vf}{\varphi}               %% short for  \varphi
+
+%%% Accent-like commands, abbreviated:
+
+\newcommand{\ov}{\overline}        %% short for  \overline
+\newcommand{\un}{\underline}       %% short for  \underline
+\newcommand{\term}[1]{\un{#1}\index{#1}}
+
+%%%%%%%%% === Theorems and suchlike === %%%%%%%%%%%%%%
+
+\theoremstyle{plain}
+\newtheorem{Th}{Teorema}[section]   %%% Theorem 1.1.1
+\newtheorem{Prop}[Th]{Proposición}     %%% Proposition 1.1.2
+\ifx \nextra \undefined
+\newtheorem{Lem}[Th]{Lema}             %%% Lemma 1.1.3
+\else
+\newtheorem{Lem}{Lema}                 %%% Lemma 3
+\fi
+\newtheorem{Cor}[Th]{Corolario}        %%% Corollary 1.1.4
+\newtheorem*{nonum-Th}{Teorema}        %%% No-numbered Theorem
+\newtheorem*{nonum-Cor}{Corolario}     %%% No-numbered Corollary
+
+\theoremstyle{definition}
+\newtheorem{Def}[Th]{Definición}       %%% Definition 1.1.5
+\newtheorem{Ex}[Th]{Ejemplo}           %%% Example 1.1.6
+\ifx \nextra \undefined
+\newtheorem{Ej}[Th]{Ejercicio}         %%% Ejercicio 1.1.7
+\else
+\newtheorem{Ej}{Ejercicio}             %%% Ejercicio 7
+\fi
+\newtheorem{Hec}[Th]{Hecho}            %%% Hecho 1.1.8
+\newtheorem*{nonum-Def}{Definición}    %%% No number Definition
+\newtheorem*{nonum-Ex}{Ejemplo}        %%% No number Example
+\newtheorem*{nonum-Ej}{Ejercicio}      %%% No number Ejercicio
+\newtheorem*{nonum-Hec}{Hecho}         %%% No number Fact
+
+\theoremstyle{remark}
+\newtheorem{Rmk}[Th]{Observación}      %%%Remark 1.1.9
+\newtheorem*{nonum-Rmk}{Observación}         %%% No number Fact
+\newtheorem*{Notn}{Notaci\'on}        %% Notaciones
+\newtheorem*{Warn}{Advertencia}       %% Advertencias
+
+\numberwithin{equation}{section}
+
+\title{Teoría Algebraica de Números}
+
+%%% DOCUMENT BEGIN
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter{Enteros Algebraicos}
+
+\section{Los Enteros Gaussianos}
+
+En el siglo XVII, Pierre de Fermat estudió diversos temas de Teoría de Números. Entre ellos, uno de sus temas favoritos fue el de representabilidad de números primos por distintas formas cuadráticas. Por ejemplo, Fermat estudió cuáles primos $p$ se pueden representar como una suma de dos cuadrados. Es decir, la solubilidad de la ecuación diofántica
+$$p=x^2+y^2$$
+con $p\in\mathbb{Z}_{\geq 1}$ un primo y $x,y\in\mathbb{Z}$. Algunos ejemplos son:
+
+\begin{align*}
+    2&=1^2+1^2 &13&=2^2+3^2&29&=2^2+5^2\\
+    5&=1^2+2^2 &17&=1^2+4^2&37&=1^2+6^2
+\end{align*}
+Si se observan estos ejemplos con cuidado, se nota que salvo el 2, los únicos primos que aparecen en esta lista 
+%%Dice en eesta lista son pero lo reemplazo por...
+cumplen que 
+$$p\equiv 1(\bmod 4).$$ 
+%%https://tex.stackexchange.com/questions/42866/typesetting-modulus-operator-as-in-remainder
+Esto es pues módulo 4, los cuadrados de un entero sólo pueden ser %yo redactaría esto distinto
+\begin{align*}
+    n\equiv 0 (\bmod 4)&\To n^2\equiv 0(\bmod 4)\\
+    n\equiv 1 (\bmod 4)&\To n^2\equiv 1(\bmod 4)\\
+    n\equiv 2 (\bmod 4)&\To n^2\equiv 4\equiv 0(\bmod 4)\\
+    n\equiv 3 (\bmod 4)&\To n^2\equiv 9\equiv 1(\bmod 4),
+\end{align*}
+es decir, los cuadrados $(\bmod 4)$ son 0 y 1. Es por esto que sólo se pueden tener las posibilidades 
+\begin{align*}
+    x^2+y^2&\equiv 0+0\equiv 0(\bmod 4)\\
+    x^2+y^2&\equiv 1+0\equiv 1(\bmod 4)\\
+    x^2+y^2&\equiv 0+1\equiv 1(\bmod 4)\\
+    x^2+y^2&\equiv 1+1\equiv 2(\bmod 4).
+\end{align*}
+Esto muestra que ningún entero $\equiv 3(\bmod 4)$ puede ser una suma de dos cuadrados. Lo que es más sorprendente es que si $p$ es un primo $\equiv 1 (\bmod 4)$, $p$ siempre se puede expresar como suma de dos cuadrados.
+
+\begin{Th}[Fermat]\label{thm:FermatPrimesSumOfSquares}
+    Para todos los números primos $p\neq 2$, se tiene que
+    $$p=a^2+b^2,\ a,b\in\bZ\iff p\equiv 1(\bmod 4).$$
+\end{Th}
+
+Este teorema cuenta con muchas demostraciones hoy en día. Sin embargo, una bastante importante y que es considerada ``natural'', pasa por estudiar el dominio de los \term{enteros Gaussianos} 
+$$\bZ[i]=\set{a+bi\mid a,b\in\bZ},\quad i=\sqrt{-1}.$$
+En $\bZ[i]$ la representación 
+$$p=x^2+y^2$$ %no me gusta hacer un despliegue sólo por esto
+se puede escribir como $p=(x+iy)(x-iy)$, por lo que la pregunta se transforma en ¿cuándo y cómo se factoriza un primo $p\in\bZ$ en $\bZ[i]$?\par 
+Para esto, primero probamos lo siguiente.
+
+\begin{Prop}
+El anillo $\bZ[i]$ es Euclideano, y por lo tanto factorial (es decir, es un dominio de factorización única DFU).    
+\end{Prop}
+
+\begin{proof}
+    Recordemos que un dominio entero $R$ es \term{Euclideano} si existe una función $\vf\:R\setminus\set{0_R}\to\bZ_{\geq0}$ tal que 
+    \begin{enumerate}[label=(\roman*)]
+        %%https://tex.stackexchange.com/questions/58713/ref-should-use-enumerate-label-name
+        \item \label{item:prop1VEuc} Si $a,b\in R\setminus\set{0_R}$, entonces $\vf(a)\leq\vf(ab)$;
+        \item \label{item:prop2VEuc}Si $a,b\in R$ y $b\neq0_R$, entonces existen $q,r\in R$ (no necesariamente únicos) tales que $a=qb+r$ con $r=0_R$ ó $r\neq 0_R$ y $\vf(r)<\vf(b)$.
+    \end{enumerate}
+    Es bien sabido que todo dominio entero Euclideano es un dominio de factorización única.\par 
+    Definimos entonces la función 
+    \begin{gather*}
+        \vf\:\bZ[i]\setminus\set{0}\to\bZ_{\geq 0}\\
+        \al\mapsto|\al|^2,   
+    \end{gather*}
+    donde $|\al|$ es el módulo complejo, es deicr, si $\al=a+bi$, con $a,b\in\bZ$, $|\al|^2=(\sqrt{a^2+b^2})^2=a^2+b^2$.\par 
+    Es claro que si $\al,\bt\in\bZ[i]\setminus\set{0}$ entonces
+    $$\vf(\al)\leq\vf(\al\bt)$$
+    pues $\vf(\al)=|\al|^2$ y $\vf(\al\bt)=|\al\bt|^2=|\al|^2|\bt|^2$ y $|\bt|\geq 1$. Entonces $\vf$ satisface la propiedad \ref{item:prop1VEuc}.\par 
+    Para ver que $\vf$ satisface la propiedad \ref{item:prop2VEuc}, sean $\al,\bt\in\bZ[i]\setminus\set{0}$ con $\bt\neq 0$. Debemos mostrar que existen enteros Gaussianos $\ga,\rho\in\bZ[i]$ tales que
+    $$\al=\ga\bt+\rho\word{con}|\rho|^2<|\bt|^2.$$
+    Ahora, note que en $\bC$ se tiene que 
+    $$\frac{\al}{\bt}=x+iy\word{para algunos}x,y\in\bR.$$
+    De hecho, como $\al,\bt\in\bZ[i]$, se tiene que $x,y\in\bQ$. En $\bC$, los enteros Gaussianos forman el retículo de puntos con coordenadas enteras, como se ve en la siguiente figura:
+    %%%%JAJAJA HACER FIGURA
+    Es claro entonces que el número complejo $\frac{\al}{\bt}=x+iy$ estará ubicado en alguno de los cuadrados determinados por este retículo:
+    %%%Fig 2
+    De la geometría de esta figura %%Literal dice esto
+    que la distancia de $\frac{\al}{\bt}=x+iy$ al punto más cercano en el retículo $\bZ[i]$ es menor o igual que la mitad de la diagonal del cuadrado, es decir, que existe al menos un $\ga\in\bZ[i]$ tal que 
+    $$\left|\frac{\al}{\bt}-\ga\right|\leq\frac{\sqrt{2}}{2}<1.$$
+    %%Cómo hago el círculito con la flecha?
+    Definimos entonces $\rho=\al-\ga\bt$. Luego, $\rho\in\bZ[i]$ y 
+    \begin{align*}
+        |\rho|^2<|\bt|^2&\iff|\rho|<|\bt|\\
+        &\iff|\al-\ga\bt|<|\bt|\\
+        &\iff\left|\frac{\al}{\bt}-\ga\right|<1\quad\text{(dividiendo por }|\bt|\ \text{a ambos lados)},
+    \end{align*}
+    pero esta última desigualdad ya fue establecida. Esto termina la demostración.
+\end{proof}
+Con este resultado, podemos demostrar el teorema de Fermat como sigue.
+%%%20191102248
+
+%%Cómo realizo la corrección de eso?
+\begin{proof}[Demostración del teorema \ref{thm:FermatPrimesSumOfSquares} de Fermat.]
+    \begin{enumerate}
+        \item[$(\To)$] Esta dirección ya la discutimos.
+        \item[$(\Leftarrow)$] Sea $p\equiv 1(\bmod 4)$ un primo en $\bZ_{\geq 1}$. Vamos a mostrar que $p$ no es irreducible en $\bZ[i]$, es decir, que exiten $\al,\bt\in\bZ[i]$ ninguno de los cuales es una unidad en $\bZ[i]$, tales que 
+        $$p=\al\.\bt.$$
+        Definimos la norma 
+        \begin{gather*}
+        N\:\bZ[i]\to\bZ_{\geq 0}\\
+        \al=a+bi\mapsto N(\al)\:=|\al|^2=a^2+b^2.
+        \end{gather*}
+        Es un ejercicio ver que la norma satisface:
+        \begin{enumerate}[label=(\roman*)]
+            \item $N(\al)=0\iff\al=0$
+            \item $N(\al\bt)=N(\al)\.N(\bt)$
+            \item $N(\al)=1\iff\al$ es una unidad en $\bZ[i]$.
+        \end{enumerate}
+        Con esto, si $p$ se descompone como %%No me gusta, y not se factoriza como
+        $$p=\al\bt$$
+        con$\al,\bt$ no unidades en $\bZ[i]$, tomando normas tendríamos que
+        \begin{align*}
+            N(p)&=N(\al)\.N(\bt)\\
+            \To p^2&=N(\al)\.N(\bt).
+        \end{align*}
+        Como ninguno de $\al$ o $\bt$ es una unidad y las unidades satisfacen $N(\al)=1$, se debe tener que $N(\al)=N(\bt)=p$, es decir, si $\al=a+bi$,
+        $$p=N(\al)=a^2+b^2,$$
+        lo que probaría el teorema.\par 
+        Resta por ver entonces, que $p$ no es irreducible en $\bZ[i]$. Para esto, como $p\equiv 1(\bmod 4)$, existe $n\in\bZ$ tal que
+        $$p=1+4n.$$
+        Luego, la congruencia 
+        $$x^2\equiv-1(\bmod p)$$
+        tiene la solución $x=(2n)!=\left(\frac{p-1}{2}\right)!$, pues por el teorema de Wilson
+        $$-1\equiv(p-1)!(\bmod p)$$
+        y 
+        \begin{align*}
+            (p-1)!=(4n)!&=(1\.2\.\dots\.2n)\.(4n\.(4n-1)\.\dots\.(2n+1))\\
+            &=(1\.2\.\dots\.2n)\.((p-1)\.(p-2)\.\dots\.(p-2n))\\
+            &\equiv(1\.2\.\dots\.2n)\.((-1)\.(-2)\.\dots\.(-2n))(\bmod p)\\
+            &\equiv(2n)!\.(-1)^{2n}\.(2n)!(\bmod p)\\
+            &\equiv[(2n)!]^2(\bmod p),
+        \end{align*}
+        por lo que 
+        $$[(2n)!]^2\equiv -1(\bmod p),$$
+        o sea que la congruencia
+        $$x^2\equiv-1(\bmod p)$$
+        tiene solución. Como tal, $p\mid x^2+1$, es decir, 
+        $$p\mid(x+i)(x-i)\word{en}\bZ[i].$$
+        Luego, $p$ no puede ser un elemento primo en $\bZ[i]$ pues entonces se tendría que $p|x+i$ ó $p\mid x-i$ y esto implicaría que
+        $$\frac{x}{p}\pm\frac{i}{p}\in\bZ[i],$$
+        lo cual es falso. Entonces, como $\bZ[i]$ es un dominio Euclideano, al no ser pirmo $p$ en $\bZ[i]$, tampoco es irreducible, y esto completa la demostración del teorema de Fermat.
+    \end{enumerate}
+\end{proof}
+
+Recuerde realizar el ejercicio de probar las propiedades de la norma. Con esto facilmente se corrobora la siguiente proposición. 
+
+\begin{Prop}
+    El grupo de unidades del anillo $\bZ[i]$ es el grupo de las raíces cuartas de la unidad, es decir
+    $$\bZ[i]^\x=\set{\pm1,\pm i}.$$
+\end{Prop}
+
+Caracterizamos ahora los elementos irreducibles de $\bZ[i]$, recuerde que dos elementos $\al,\bt$ de un anillo $R$ son \term{asociados} si existe una unidad $u\in R$ tal que $\al=u\bt$. A su vez, el producto de un irreducible $\pi$ con una unidad $u$ es irreducible. Es decir, $u\pi$ es un elemento irreducible. Con esto tenemos el siguiente resultado.
+
+\begin{Th}
+    Los elementos $\pi$ en $\bZ[i]$, hasta asociados, son los siguientes:
+    \begin{enumerate}
+        \item $\pi=1+i$,
+        \item $\pi=a+bi$, con $a^2+b^2=p$ y $p\in\bZ$ tal que $p\equiv1(\bmod 4)$ y $a>|b|>0$.
+        \item $\pi=p$, con $p\equiv3(\bmod 4)$ un primo en $\bZ$.
+    \end{enumerate}
+\end{Th}
+
+\begin{proof}
+    Una dirección es fácil. Ahora, sea $\pi\in\bZ[i]$ un irreducible. Hay que mostrar que $\pi$ es uno de los números de la lista. Se tiene que 
+    $$N(\pi)=\pi\.\ov{\pi}=p_1\.\dots\.p_r,\word{con} p_i\in\bZ_{\geq 1},\word{primos.}$$
+    Como $\pi$ es irreducible (y por lo tanto primo pues $\bZ^[i]$ es un DFU), $\pi\mid p=p_i$ para algún $p_i$, por lo que $N(\pi)\mid N(p)=p^2$. \begin{itemize}
+        \item $N(\pi)=p\To p=\pi\ov{\pi}=(a+bi)(a-bi)\To \pi=a+bi$ con $a^2+b^2=p$.
+        \item $N(\pi)=p^2\To \pi\sim p$ pues como $N(\pi)=p^2$ entonces $\pi\ov{\pi}=p^2\To \pi\mid p$ y así $\frac{p}{\pi}\in\bZ[i]$ y $N\left(\frac{p}{\pi}\right)=1$ por lo que $\frac{p}{\pi}\in\bZ[i]^\x$. Es decir, $\pi\sim p$.\par 
+        Entonces, se debe tener $p\equiv 3(\bmod 4)$ pues si no se tendría $p\equiv 1(\bmod 4)$ ó $p=2$ y entonces como consecuencia del teorema \ref{thm:FermatPrimesSumOfSquares} de Fermat de dos cuadrados, se tendría que 
+        $$p=a^2+b^2=(a+bi)(a-bi)$$
+        y por ende $p$ no sería irreducible.
+    \end{itemize}
+\end{proof}
+De aquí nos preguntamos entonces:
+\begin{center}
+    \emph{¿Cómo se factorizan los primos $p\in\bZ$ en los enteros Gaussianos?}
+\end{center}
+\begin{itemize}
+    \item El número 2 se puede factorizar como
+    $$2=1^2+1^2=(1+i)(1-i)=-i(1+i)^2\To 2\sim(1+i)^2$$
+    y entonces 2 es el cuadrado de un irreducible. En este caso diremos que 2 se \term{ramifica} (del inglés \emph{ramifies}).
+    \item $p\equiv 1(\bmod 4)$ \term{escinde} como producto de dos irreducibles conjugados: $p=(a+bi)(a-bi)$ con $a+bi$ irreducible.
+    \item Si $p\equiv 3(\bmod 4)$ entonces $p$ permanece primo y le llamamos \term{inerte}.
+\end{itemize}
+
+\begin{Prop}
+    $\bZ[i]$ consiste precisamente de los elementos de la extensión $\bQ(i)|\bQ=\set{a+bi\mid a,b\in\bQ}$ que satisfacen la ecuación polinomial mónica 
+    $$x^2+ax+b=0$$
+    con coeficientees $a,b\in\bZ$.
+\end{Prop}
+
+\begin{proof}
+    Hay que mostrar que 
+    $$\bZ[i]=\set{\al\in\bQ(i)\mid\al\word{es raíz de un polinomio} x^2+ax+b,\ a,b\in\bZ}.$$ Sea $\al=c+di\in\bQ(i)$ entonces $\al$ es raíz del polinomio
+    \begin{align*}
+        f_\al(x)=(x-\al)(x-\ov{\al})&=x^2-(\al+\ov{\al})x+\al\ov{\al}\\
+        &=x^2-2cx+c^2+d^2\\
+        &=x^2+ax+b,\ a=-2c,\ b=c^2+d^2.
+    \end{align*}
+   Claramente si $c,d\in\bZ$, entonces $a,b\in\bZ$. Inversamente, si $a$ y $b$ son enteros, entonces $2c,2d\in\bZ$ y por tanto $c,d\in\half\bZ$. Ahora $4b=(2c)^2+(2d)^2\equiv 0(\bmod 4)$ y así tanto $(2c)^2$ como $(2d)^2$ son congruentes a $0(\bmod 4)$. Por lo tanto $c,d\in\bZ$.
+\end{proof}
+
+\section{Nociones básicas de Teoría de Cuerpos}
+En general si $K,L$ son cuerpos y $\vf\: K\to L$ es un monomorfismo, decimos que $L$ es una \term{extensión} de $K$. Denotamos por $L|K$ a la extensión. Como podemos identificar $K$ con $\vf(K)$, en general al hablar de extensiones simplemente asumiremos que es una inclusión $K\subset L$ de cuerpos. Le llamamos a $K$ el \term{cuerpo base}.\par 
+Podemos ver a $L$ como un $K$-espacio vectorial. Si se define la multiplicación escalar 
+$$\circ\:K\x L\to L,\ (\al,\bt)\mapsto \al\bt$$
+donde $\al\bt$ es simplemente la multiplicación en $L$.
+
+\begin{Def}
+    El \term{grado de extensión} de la extensión $L|K$ es $\dim_K(L)$ y lo denotamos $[L:K]$. En el caso que $[L:K]<\infty$, diremos que $L|K$ es una extensión finita. Caso contrario se le llamará una extensión infinita.
+\end{Def}
+
+\begin{Ex}
+    Sea $\bQ(\sqrt{2})=\set{a+b\sqrt{2}|a,b\in\bQ}$. La extensión $\bQ(\sqrt{2})|\bQ$ claramente es una extensión de $\bQ$ de grado 2, es decir $[\bQ(\sqrt{2}):\bQ]=2$.
+\end{Ex}
+
+\begin{Ex}
+    $\bC|\bR$ es una extensión de grado $[\bC:\bR]=2$ pues $\bC=\bR\.1\oplus\bR\.i$ como un $\bR$-espacio vectorial.
+\end{Ex}
+
+\begin{Ex}
+    Sea $K=\bQ(\sqrt[3]{2})$, veremos que $K|\bQ$ es una extensión de grado $[K:\bQ]=3$ y que $\set{1,\sqrt[3]{2},\sqrt[3]{4}}$ es una $\bQ$-base para $K$, es decir, que 
+    $$K=\set{a+b\sqrt[3]{2}+c\sqrt[3]{4}|a,b,c\in\bQ}.$$
+\end{Ex}
+
+\subsection{Generadores de cuerpos}
+
+\begin{Def} 
+    Sea $K$ una extensión de $F$. Si $X\subseteq K$ es un subconjunto, entonces el anillo $F[X]$ generado por $F$ y $X$ es la intersección de todos los subanillos de $K$ que contienen a $F$ y $X$. El cuerpo $F(X)$ generado por $F$ y $X$ es la intersección de todos los subcuerpos de $K$ que contienen a $F$ y $X$. Si $X=\set{a_1,\dots,a_n}$ es finito, escribimos $F[X]=F\lbrack [a_1,\dots,a_n\rbrack$ y $F(X)=F(a_1,\dots,a_n)$. Si $X$ es finito, diremos que $F(X)$ es una \term{extensión finitamente generada}.
+\end{Def}   
+Podemos describir estos conjuntos de manera más explicita.
+
+\begin{Prop}
+    Sea $K|F$ una extensión y $a\in K$. Entonces
+    
+    \begin{gather*}
+        F[a]=\set{f(a)|f\in F\lbrack x\rbrack}\\
+        F(a)=\set{\frac{f(a)}{g(a)}\st f,g\in F\lbrack x\rbrack,\ g(a)\neq 0}.
+    \end{gather*}
+    
+    Más aún, $F(a)$ es el cuerpo de cocientes de $F[a]$.
+\end{Prop}
+
+Podemos generalizar a lo siguiente.
+
+\begin{Prop}
+    Sea $K|F$ una extensión y $a_1,\dots,a_n\in K$. Entonces  
+    \begin{gather*}
+        F\lbrack [a_1,\dots,a_n\rbrack=\set{f(a_1,\dots,a_n)|f\in F\lbrack x_1,\dots,x_n\rbrack}\\
+        F(a_1,\dots,a_n)=\set{\frac{f(a_1,\dots,a_n)}{g(a_1,\dots,a_n)}\st f,g\in F\lbrack x_1,\dots,x_n\rbrack,\ g(a_1,\dots,a_n)\neq 0}.
+    \end{gather*}
+    Más aún, $F(a_1,\dots,a_n)$ es el cuerpo de cocientes de $F\lbrack [a_1,\dots,a_n\rbrack$.
+\end{Prop}
+
+En este curso, nuestro interés está en estudiar conjuntos de números algebraicos que definimos a continuación. 
+
+\begin{Def}
+    \begin{itemize}
+        \item Si $K|F$ es una extensión de cuerpos, entonces diremos que un elemento $\al$ de $K$ es \term{algebraico} sobre $F$ si existe un polinomio no nulo $f\in F[x]$ con $f(\al)=0$.
+        \item Si $\al$ no es algebraico sobre $F$, decimos que $\al$ es \term{trascendental} sobre $F$. 
+        \item Si todo elementos de $K$ es algebraico sobre $F$, decimos que $K$ es algebraico sobre $F$, y que $K|F$ es una \term{extensión algebraica}.
+    \end{itemize}
+\end{Def}
+
+\begin{Ex}
+    La extensión $\bC|\bR$ es algebraica pues si $\al\in\bC$ entonces $\al$ es la raíz del polinomio
+    $$p_\al(x)\:=(x-\al)(x-\ov{\al})=x^2-(\al+\ov{\al})x+\al\ov{\al}=x^2-2\Re(\al)x+|\al|^2$$
+    y claramente $p_\al\in\bR[x]$.
+\end{Ex}
+
+\begin{Ex}
+    Por el contrario, la extensión $\bR|\bQ$ no es algebraica. Por ejemplo es bien conocido que $\pi\approx 3.1415\dots$ no satisface ninguna ecuación polinomial con coeficientes racionales. Este es un resultado de Lindemann de 1882.
+\end{Ex}
+
+\begin{Def}
+    Si $\al$ es algebraico sobre un cuerpo $F$, el \term{polinomio minimal} de $\al$, es polinomio mónico irreducible $p$ de menor grado en $F[x]$ para el cual $p(\al)=0$. Denotamos $\min(F,\al)$.
+\end{Def}
+
+\begin{Ex}
+    Es importante recalcar que el polinomio minimal depende del cuerpo base.
+    \begin{itemize}
+        \item $\min(i,\bQ)=x^2+1$,
+        \item $\min(\sqrt{2},\bQ)=x^2-2$,
+        \item $\min(\sqrt[3]{2},\bQ)=x^3-2$,
+        \item $\min(i,\bC)=x-i$, 
+    \end{itemize}
+\end{Ex}
+
+Las propiedades de los polinomios minimales se resumen en la siguiente proposición.
+
+\begin{Prop}
+    Sea $K|F$ una extensión y $\al\in K$ algebraico sobre $F$. Entonces se tiene lo siguiente:
+    \begin{enumerate}[label=(\roman*)]
+        \item El polinomio minimal $\min(F,\al)$ es irreducible sobre $F$.
+        \item Si $g\in F[x]$, entonces $g(\al)=0$ si y sólo si $\min(F,\al)\mid g$. 
+        \item Si $\deg(\min(F,\al))$, entonces los elementos $1,\al,\dots,\al^{n-1}$ forman una base para $F(\al)$ sobre $F$, y por lo tanto $[F(\al):F]$ coincide con el grado del polinomio minimal. Más aún, en este caso vale $F[\al]=F(\al)$.
+    \end{enumerate}
+\end{Prop}
+
+\begin{Ex}
+    Considere la extensión $\bQ(\sqrt[5]{3})|\bQ$. Note que $\sqrt[5]{3}$ es raíz del polinomio $p(x)=x^5-3$ y este polinomio es irreducible sobre $\bQ$, basta aplicar el criterio de Eisenstein. Por lo tanto $x^5-3$ es el polinomio minimal de $\sqrt[5]{3}$ sobre $\bQ$.\par 
+    Por la proposición concluimos que $[\bQ(\sqrt[5]{3}):\bQ]=5$ y que los elementos $1,\sqrt[5]{3}, 3^{\frac{2}{5}}, 3^{\frac{3}{5}}, 3^{\frac{4}{5}}$ forman una $\bQ$-base para $\bQ(\sqrt[5]{3})$.
+\end{Ex}
+
+Un teorema básico en la teoría es el siguiente, que nos da la propiedad de multiplicatividad de grados en una cadena de extensiones.
+
+\begin{Th}[Teorema de la torre]\label{thm:towerExtDeg}
+    Sean $F\subseteq L\subseteq K$ cuerpos. Entonces vale
+    $$[K:F]=[K:L][L:F].$$
+\end{Th}
+
+La idea de la demostración básicamente es que si $\set{a_i}$ es una base para $L|F$ y $\set{b_j}$ es una base para $K|L$, entonces el conjunto de productos $\set{a_ib_j}$ es una base para $K|F$.
+
+\begin{Ex}
+    Considere $K=\bQ(\sqrt{2},\sqrt{3})$. Note que se tiene las inclusiones 
+    $\bQ\subseteq\bQ(\sqrt{2})\subseteq K$ y $\bQ\subseteq\bQ(\sqrt{3})\subseteq K$. Gráficamente podemos verlo como el siguiente retículo:
+    \begin{center}
+        \begin{tikzcd}[column sep=small]
+            & K=\bQ(\sqrt{2},\sqrt{3}) \arrow[dl]{2} \arrow[dr]{2} & \\
+            \bQ(\sqrt{2}) \arrow{dr} & & \bQ(\sqrt{3})\arrow{dl}\\
+            &\bQ&
+            \end{tikzcd}
+    \end{center}
+    %%Corregir diagrama
+    Una base para $K|\bQ(\sqrt{2})$ es $\set{1,\sqrt{3}}$ y una base para $\bQ(\sqrt{2})|\bQ$ es $\set{1,\sqrt{2}}$. Por lo tanto una base para $K|\bQ$ es el conjunto de productos $\set{1,\sqrt{2},\sqrt{3},\sqrt{6}}$. Además, $[K:\bQ]=4$.
+\end{Ex}
+
+El nombre del teorema anterior se debe a que a una cadena de extensiones de cuerpos 
+$$L_1\subseteq L_2\subseteq\dots\subseteq L_n$$
+ se le suele conocer como una torre de cuerpo. Usando el teorema de la torre podemos demostrar lo siguiente.
+
+ \begin{Th}
+     Si $K|F$ es una extensión de cuerpos finita, entonces $K$ es algebraico y finitamente generado sobre $F$.
+ \end{Th}
+
+ \begin{Th}
+     Si $K|F$ es una extensión, cada $\al_i\in K$ es algebraico sobre $F$ para $i=1,\dots,n$, entonces $F[\al_1,\dots,\al_n]$ es una extensión de cuerpos finita de $F$ con
+     $$[F[\al_1,\dots,\al_n]:F]\leq\prod_{i=1}^n[F(\al_i):F].$$
+ \end{Th}
+
+ \begin{Cor}
+     Si $K|F$ es una extensión, entonces un elemento $\al\in K$ es algebraico sobre $F$ si y sólo si $[F(\al):F]<\infty$. Además, si $[K:F]<\infty$ entonces $K|F$ es una extensión algebraica.\par 
+     También la propiedad de ser algebraica es transitiva sobre cadenas de extensiones.
+ \end{Cor}
+
+ \begin{Th}
+     Sea $F\subseteq L\subseteq K$ una torre de cuerpos. Si $L|F$ y $K|L$ son algebraicas, entonces $K|F$ es algebraica.
+ \end{Th}
+
+ \begin{Def}
+     Sea $K|F$ una extensión. El conjunto 
+     $$\set{\al\in K\st \al\word{es algebraico sobre} F}$$
+     se llama la \term{clausura algebraica} de $F$ en $K$.
+ \end{Def}
+
+ \begin{Th}
+     Sea $K|F$ una extensión y $L$, la clausura algebraica de $F$ en $K$. Entonces $L$ es un cuerpo y por tanto es la extensión algebraica de $F$ más grande que está contenida en $K$.
+ \end{Th}
+
+ \begin{proof}
+     Sean $\al,\bt\in L$. Como $\al,\bt$ son algebraicos sobre $F$, el cuerpo $F(\al,\bt)$ es de dimensión finita sobre $F$ y por lo tanto $F(\al,\bt)|F$ es algebraica. Esto implica que $F(\al,\bt)\subseteq L$ y como $\al\pm\bt,\al\bt$ y $\frac{\al}{\bt}$ (para $\bt\neq 0$) están en $F(\al,\bt)$, estos también están en $L$. Esto prueba que $L$ es un cuerpo.
+ \end{proof}
+%%%Falta probar que es la más grande cont en K
+
+\begin{Ex}
+    Considere la extensión $\bC|bQ$. La clausura algebraica de $\bQ$ en $\bC$ se denota por 
+    $$\ov{\bQ}=\set{\al\in\bC\st \al\word{es algebraico sobre}\bQ}.$$
+    Por el teorema anterior, $\ov{\bQ}$ es un subcuerpo de $\bC$. Es un ejercicio ver que $\ov{\bQ}|\bQ$ es una extensión infinita. En buena medida, el estudio que haremos en el curso se concentra en los subcuerpos de $\ov{\bQ}|\bQ$.
+\end{Ex}
+
+\subsection{El compuesto de extensiones de cuerpos}
+
+Sea $F$ un cuerpo y sean $L_1|F, L_2|F$ extensiones contenidas en un cuerpo común $K$, como en la figura siguiente.
+\begin{center}
+    \begin{tikzcd}[column sep=small]
+        &K \arrow[dl]{2} \arrow[dr]{2} & \\
+        L_1 \arrow{dr} & & L_2\arrow{dl}\\
+        &F&
+        \end{tikzcd}
+\end{center}
+Entonces, el \term{compuesto} $L_1L_2$ de $L_1$ y $L_2$ es el subcuerpo de $K$ generado por $L_1$ y $L_2$. Es decir, $L_1L_2=L_1(L_2)=L_2(L_1)$. 
+
+\begin{Ex}
+    El compuesto de $\bQ(\sqrt{2})$ y $\bQ(\sqrt{3})$ es $\bQ(\sqrt{2},\sqrt{3})$
+\end{Ex}
+
+Un concepto sumamente importante para nosotros es el de automorfismos y homomorfismos de cuerpos. Sean $K|F$ y $L|F$ extensiones. Un \term{$F$-homomorfismo} $\sg \: K \into L$ es un homomorfismo de anillos tal que $\sg(\al)=\al$ para $\al\in F$. 
+Es decir, $\sg\mid_F=\id_F$. Si $\sg$ es biyectivo, decimos que $\sg$ es un \term{$F$-isomorfismo}. 
+Además un $F$-isomorfismo $\sg:K\to K$ se llamará un \term{$F$-automorfismo}.\par 
+Algunas propiedades básicas son las siguientes:
+
+\begin{enumerate}
+    \item Un $F$-homomorfismo $\sg\: K\to L$ es una transformación lineal de $F$-espacios vectoriales. Esto pues si $a\in F$ y $\al\in K$, entonces $\sg(a\al)=\sg(a)\sg(\al)=a\sg(\al)$.
+    \item $\tau$ es inyectivo.
+    \item Si $[K:F]=[L:F]<\infty$, entonces $\tau$ también es sobreyectivo, por el teorema de rango y nulidad por ejemplo. Por ende todo $F$-homomorfismo entre extensiones finitas de la misma dimensión es un $F$-isomorfismo.
+    \item Si $K|F$ es una extensión finita, entonces todo $F$-isomorfismo $\sg\:K\to K$ es un $F$-automorfismo.
+\end{enumerate}
+
+El siguiente es uno de los objetos más importantes de la Teoría de Galois.
+
+\begin{Def}[Grupo de Galois]\label{def:galoisGroup}
+    Sea $K|F$ una extensión de cuerpos. El grupo de Galois de $K|F$ es el conjunto
+    $$\Gal(K|F)\:=\set{\tau\: K\to K\st \tau\word{es un} F\text{-automorfismo}}.$$
+\end{Def}
+
+El siguiente resultado nos dice que si $K=F(X)$ es el cuerpo generado por un conjunto $X$ sobre $F$, entonces los $F$-automorfismos de $K$ se pueden determinar respecto a su acción sobre los elementos de $X$.
+
+\begin{Prop}
+    Sea $K=F(X)$ una extensión de cuerpos de $F$ generada sobre $F$ por un subconjunto $X$ de un cuerpo $K$. Si $\sg,\tau\in\Gal(K|F)$ y $\sg|_X=\tau|_X$, entonces $\sg=\tau$. Por lo tanto, los $F$-automorfismos de $K$ están determinados por su acción sobre un conjunto generador.
+\end{Prop}
+
+\begin{Prop}
+    Sea $\sg\: K\to L$ un $F$-homomorfismo y sea $\al\in K$ algebraico sobre $F$. Si $f\in F[x]$ y $f(\al)=0$, entonces $f(\sg(\al))=0$. Por lo tanto, $\sg$ permuta las raíces de $\min(F,\al)$. Además, $\min(F,\al)=\min(F,\sg(\al))$.
+\end{Prop}
+
+Un corolario de esto es lo siguiente.
+
+\begin{Cor}
+    Si $[K:F]<\infty$, entonces $|\Gal(K|F)|<\infty$.
+\end{Cor}
+
+\begin{Ex}
+    Considere la extensión $\bQ(\sqrt{2})|\bQ$. Sea $\sg$ un $\bQ$-automorfismo. Entonces $\sg$ está completamente determinado por su acción sobre $\sqrt{2}$. Como el polinomio minimal de $\sqrt{2}$ sobre $\bQ$ es $p(x)=x^2-2$ y sus raíces son $\pm\sqrt{2}$, debe tenerse $\sg(\sqrt{2})=\pm\sqrt{2}$.
+\end{Ex}
+ %%%%%%%%%%%% Contents end %%%%%%%%%%%%%%%%
+%\printindex REVISAR
+%\nocite{*}
+%\bibliographystyle{plain}
+%\bibliography{bibi}
+\end{document} 
